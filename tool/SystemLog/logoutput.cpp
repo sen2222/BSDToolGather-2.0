@@ -7,7 +7,7 @@
 LogOutput ::LogOutput()
 {
     QString logDirTmp = CONFIG_READ_STRING(CONFIG_SECTION_LOG_OUTPUT, CONFIG_KEY_LOG_FILE_PATH, "/log");
-    logLevel = CONFIG_READ_INT(CONFIG_SECTION_LOG_OUTPUT, CONFIG_KEY_LOG_LEVEL, 0);
+    logLevel = CONFIG_READ_INT(CONFIG_SECTION_LOG_OUTPUT, CONFIG_KEY_LOG_LEVEL, 3);
     logDir = QDir::currentPath() + "/" + logDirTmp;
     
     QDir dir(logDir);

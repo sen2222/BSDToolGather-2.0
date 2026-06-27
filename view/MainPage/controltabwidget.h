@@ -16,7 +16,13 @@ public:
     ~ControlTabWidget();
 
 private:
+    void setupTabs();
+    void ensureStressUpgradeTabLoaded();
+    void ensureFontConvertTabLoaded();
+
     Ui::ControlTabWidget *ui;
+    int m_stressUpgradeTabIndex;
+    int m_fontConvertTabIndex;
 };
 
 #endif // CONTROLTABWIDGET_H

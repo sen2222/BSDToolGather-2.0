@@ -13,7 +13,7 @@
 
 #define BSD_LOG(level, message) LogOutput::getInstance()->logOut(level, message)
 
-#define BSD_LOG_INFO(level, message) \
+#define BSD_LOG_DEBUG(level, message) \
     LogOutput::getInstance()->logOut(level, \
         QString("(%2)%3: %4").arg(__FUNCTION__).arg(__LINE__).arg(message))
 

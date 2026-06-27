@@ -1,0 +1,12 @@
+[
+  {
+    "VID": "A108",
+    "PID": "2240",
+    "TypeString": "JZ rootfs"
+  },
+  {
+    "VID": "0403",
+    "PID": "6001",
+    "TypeString": "JZ recovery"
+  }
+]

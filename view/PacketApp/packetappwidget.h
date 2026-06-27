@@ -7,7 +7,7 @@
 
 
 #define PACKET_APP_CONFIG_SECTION      "PacketApp"
-#define PACKET_APP_OUTPUT_PATH_KEY     "OutputPath"
+#define PACKET_APP_OUTPUT_PATH_KEY     "outputPath"
 #define PARTITION_ROW_COUNT            9
 
 class QCheckBox;

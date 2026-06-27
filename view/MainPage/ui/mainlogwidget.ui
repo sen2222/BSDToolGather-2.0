@@ -27,7 +27,13 @@
     <number>2</number>
    </property>
    <item>
-    <widget class="QPlainTextEdit" name="logTextEdit"/>
+    <widget class="QPlainTextEdit" name="logTextEdit">
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

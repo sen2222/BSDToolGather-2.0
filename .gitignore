@@ -1,6 +1,7 @@
 build/
 debug/
 release/
+source/
 .vscode/
 
 *.pro.user
