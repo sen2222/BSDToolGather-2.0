@@ -15,14 +15,17 @@ win32:LIBS += -lsetupapi -lcfgmgr32
 
 SOURCES += \
     main.cpp \
+    application/CdcFunction/cdccommandcore.cpp \
     application/FontConvert/fontconvertcore.cpp \
     application/PacketApp/packetappcore.cpp \
     application/StressUpgrade/stressupgradeworker.cpp \
     application/StressUpgrade/usbvidpidrules.cpp \
+    tool/Crc/crc8.cpp \
     tool/RingBuff/ringbuffer.cpp \
     tool/SerialPort/serialportquery.cpp \
     tool/SystemLog/logoutput.cpp \
     tool/ConfigBase/configbase.cpp \
+    view/CdcFunction/cdcfunctionwidget.cpp \
     view/FontConvert/fontconvertwidget.cpp \
     view/PacketApp/packetappwidget.cpp \
     view/StressUpgrade/stressupgradewidget.cpp \
@@ -33,16 +36,19 @@ SOURCES += \
 
 
 HEADERS += \
+    application/CdcFunction/cdccommandcore.h \
     application/FontConvert/fontconvertcore.h \
     application/PacketApp/packetappcore.h \
     application/StressUpgrade/stressupgradeworker.h \
     application/StressUpgrade/usbvidpidrules.h \
+    tool/Crc/crc8.h \
     tool/SafeQueue/safequeue.h \
     tool/RingBuff/ringbuffer.h \
     tool/SerialPort/serialportquery.h \
     tool/SystemLog/logoutput.h \
     tool/ConfigBase/configbase.h \
     tool/alltoolfun.h \
+    view/CdcFunction/cdcfunctionwidget.h \
     view/FontConvert/fontconvertwidget.h \
     view/PacketApp/packetappwidget.h \
     view/StressUpgrade/stressupgradewidget.h \
@@ -60,9 +66,11 @@ FORMS += \
 
 
 INCLUDEPATH += \
+    application/CdcFunction \
     application/FontConvert \
     application/PacketApp \
     application/StressUpgrade \
+    view/CdcFunction \
     view/FontConvert \
     view/PacketApp \
     view/StressUpgrade \

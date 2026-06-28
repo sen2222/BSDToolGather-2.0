@@ -146,7 +146,6 @@ private:
     bool writeAll(const QByteArray &data, int timeoutMs, QString *errorMessage);
 
     QByteArray buildPacket(quint8 command, const QByteArray &payload5 = QByteArray()) const;
-    quint8 crc8(const char *data, int length) const;
 
     Options m_options;
     UsbVidPidRules m_rules;

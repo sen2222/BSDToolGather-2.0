@@ -76,9 +76,9 @@ void PacketAppWidget::setupUi()
         spinBox->setRange(0, 255);
         spinBox->setFixedWidth(72);
     }
-    m_versionMajor->setValue(2);
+    m_versionMajor->setValue(0);
     m_versionMinor->setValue(0);
-    m_versionPatch->setValue(7);
+    m_versionPatch->setValue(0);
 
     QHBoxLayout *versionLayout = new QHBoxLayout();
     versionLayout->setContentsMargins(0, 0, 0, 0);

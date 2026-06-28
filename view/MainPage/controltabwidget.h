@@ -19,10 +19,12 @@ private:
     void setupTabs();
     void ensureStressUpgradeTabLoaded();
     void ensureFontConvertTabLoaded();
+    void ensureCdcFunctionTabLoaded();
 
     Ui::ControlTabWidget *ui;
     int m_stressUpgradeTabIndex;
     int m_fontConvertTabIndex;
+    int m_cdcFunctionTabIndex;
 };
 
 #endif // CONTROLTABWIDGET_H

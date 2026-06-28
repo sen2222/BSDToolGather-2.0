@@ -1,6 +1,7 @@
 #include "controltabwidget.h"
 #include "ui_controltabwidget.h"
 
+#include "cdcfunctionwidget.h"
 #include "fontconvertwidget.h"
 #include "packetappwidget.h"
 #include "stressupgradewidget.h"
@@ -14,6 +15,7 @@ ControlTabWidget::ControlTabWidget(QWidget *parent)
     , ui(new Ui::ControlTabWidget)
     , m_stressUpgradeTabIndex(-1)
     , m_fontConvertTabIndex(-1)
+    , m_cdcFunctionTabIndex(-1)
 {
     ui->setupUi(this);
     setupTabs();
@@ -47,11 +49,17 @@ void ControlTabWidget::setupTabs()
     fontConvertTab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_fontConvertTabIndex = ui->tabWidget->addTab(fontConvertTab, QStringLiteral("字模转换"));
 
+    QWidget *cdcFunctionTab = new QWidget(ui->tabWidget);
+    cdcFunctionTab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_cdcFunctionTabIndex = ui->tabWidget->addTab(cdcFunctionTab, QStringLiteral("CDC功能"));
+
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, [this](int index) {
         if (index == m_stressUpgradeTabIndex) {
             ensureStressUpgradeTabLoaded();
         } else if (index == m_fontConvertTabIndex) {
             ensureFontConvertTabLoaded();
+        } else if (index == m_cdcFunctionTabIndex) {
+            ensureCdcFunctionTabLoaded();
         }
     });
 
@@ -59,6 +67,8 @@ void ControlTabWidget::setupTabs()
         ensureStressUpgradeTabLoaded();
     } else if (ui->tabWidget->currentIndex() == m_fontConvertTabIndex) {
         ensureFontConvertTabLoaded();
+    } else if (ui->tabWidget->currentIndex() == m_cdcFunctionTabIndex) {
+        ensureCdcFunctionTabLoaded();
     }
 }
 
@@ -92,4 +102,20 @@ void ControlTabWidget::ensureFontConvertTabLoaded()
     FontConvertWidget *fontConvertWidget = new FontConvertWidget(fontConvertTab);
     fontConvertWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     layout->addWidget(fontConvertWidget, 1);
+}
+
+void ControlTabWidget::ensureCdcFunctionTabLoaded()
+{
+    QWidget *cdcFunctionTab = ui->tabWidget->widget(m_cdcFunctionTabIndex);
+    if (!cdcFunctionTab || cdcFunctionTab->layout()) {
+        return;
+    }
+
+    QVBoxLayout *layout = new QVBoxLayout(cdcFunctionTab);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    CdcFunctionWidget *cdcFunctionWidget = new CdcFunctionWidget(cdcFunctionTab);
+    cdcFunctionWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    layout->addWidget(cdcFunctionWidget, 1);
 }
