@@ -5,21 +5,26 @@
 
 #include <QByteArray>
 #include <QString>
+#include <QtGlobal>
+
+#pragma pack(push, 1)
+struct CAMERA_TIME_OSD_CTRL_S
+{
+    quint32 time_stamp;
+    quint8 mjpeg_show_flag;
+    quint16 mjpeg_show_x;
+    quint16 mjpeg_show_y;
+    quint8 h264_show_flag;
+    quint16 h264_show_x;
+    quint16 h264_show_y;
+};
+#pragma pack(pop)
+
+static_assert(sizeof(CAMERA_TIME_OSD_CTRL_S) == 14, "CAMERA_TIME_OSD_CTRL_S size must be 14 bytes");
 
 class CdcCommandCore
 {
 public:
-    struct TimeOsdOptions
-    {
-        quint32 timeStamp = 0;
-        quint8 mjpegShowFlag = 0;
-        quint16 mjpegShowX = 0;
-        quint16 mjpegShowY = 0;
-        quint8 h264ShowFlag = 0;
-        quint16 h264ShowX = 0;
-        quint16 h264ShowY = 0;
-    };
-
     struct CommandResult
     {
         bool success = false;
@@ -28,13 +33,13 @@ public:
         QByteArray response;
     };
 
-    static QByteArray buildTimeOsdPacket(const TimeOsdOptions &options);
+    static QByteArray buildTimeOsdPacket(const CAMERA_TIME_OSD_CTRL_S &timeOsdCtrl);
     static CommandResult sendTimeOsdCommand(SerialPort *port,
-                                            const TimeOsdOptions &options,
+                                            const CAMERA_TIME_OSD_CTRL_S &timeOsdCtrl,
                                             int writeTimeoutMs = 3000,
                                             int readTimeoutMs = 1000);
     static CommandResult sendTimeOsdCommand(const SerialPort::Config &config,
-                                            const TimeOsdOptions &options,
+                                            const CAMERA_TIME_OSD_CTRL_S &timeOsdCtrl,
                                             int writeTimeoutMs = 3000,
                                             int readTimeoutMs = 1000);
 };

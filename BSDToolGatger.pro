@@ -81,6 +81,8 @@ INCLUDEPATH += \
 RESOURCES += \
     res.qrc
 
+win32:RC_ICONS += $$PWD/res/test.ico
+
 # freetype library
 INCLUDEPATH += $$PWD/source/freetype/out/include/freetype2
 LIBS += -L$$PWD/source/freetype/out/lib -lfreetype

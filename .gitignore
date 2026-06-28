@@ -1,7 +1,10 @@
-build/
+build/*
+!build/
+!build/*.bat
+out/
 debug/
 release/
-source/
+# source/
 .vscode/
 
 *.pro.user

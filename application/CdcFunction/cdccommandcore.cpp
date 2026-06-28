@@ -2,28 +2,11 @@
 
 #include "Crc/crc8.h"
 
+#define CDC_PACKET_HEADER0 0xEA
+#define CDC_PACKET_HEADER1 0xFF
+#define CDC_TIME_OSD_COMMAND 0xAB
+
 namespace {
-
-constexpr quint8 kHeader0 = 0xEA;
-constexpr quint8 kHeader1 = 0xFF;
-constexpr quint8 kTimeOsdCommand = 0xAB;
-
-#pragma pack(push, 1)
-struct CAMERA_TIME_OSD_CTRL_S
-{
-    quint32 time_stamp;
-    quint8 mjpeg_show_flag;
-    quint16 mjpeg_show_x;
-    quint16 mjpeg_show_y;
-    quint8 h264_show_flag;
-    quint16 h264_show_x;
-    quint16 h264_show_y;
-};
-#pragma pack(pop)
-
-static_assert(sizeof(CAMERA_TIME_OSD_CTRL_S) == 14, "CAMERA_TIME_OSD_CTRL_S size must be 14 bytes");
-
-constexpr quint16 kTimeOsdDataSize = sizeof(CAMERA_TIME_OSD_CTRL_S);
 
 void appendU8(QByteArray &data, quint8 value)
 {
@@ -44,42 +27,27 @@ void appendBe32(QByteArray &data, quint32 value)
     data.append(static_cast<char>(value & 0xFF));
 }
 
-QByteArray serializeTimeOsdData(const CAMERA_TIME_OSD_CTRL_S &ctrl)
-{
-    QByteArray data;
-    data.reserve(kTimeOsdDataSize);
-    appendBe32(data, ctrl.time_stamp);
-    appendU8(data, ctrl.mjpeg_show_flag);
-    appendBe16(data, ctrl.mjpeg_show_x);
-    appendBe16(data, ctrl.mjpeg_show_y);
-    appendU8(data, ctrl.h264_show_flag);
-    appendBe16(data, ctrl.h264_show_x);
-    appendBe16(data, ctrl.h264_show_y);
-    return data;
-}
-
 } // namespace
 
-QByteArray CdcCommandCore::buildTimeOsdPacket(const TimeOsdOptions &options)
+QByteArray CdcCommandCore::buildTimeOsdPacket(const CAMERA_TIME_OSD_CTRL_S &timeOsdCtrl)
 {
-    const CAMERA_TIME_OSD_CTRL_S ctrl = {
-        options.timeStamp,
-        options.mjpegShowFlag,
-        options.mjpegShowX,
-        options.mjpegShowY,
-        options.h264ShowFlag,
-        options.h264ShowX,
-        options.h264ShowY
-    };
-    const QByteArray payload = serializeTimeOsdData(ctrl);
+    QByteArray payload;
+    payload.reserve(sizeof(CAMERA_TIME_OSD_CTRL_S));
+    appendBe32(payload, timeOsdCtrl.time_stamp);
+    appendU8(payload, timeOsdCtrl.mjpeg_show_flag);
+    appendBe16(payload, timeOsdCtrl.mjpeg_show_x);
+    appendBe16(payload, timeOsdCtrl.mjpeg_show_y);
+    appendU8(payload, timeOsdCtrl.h264_show_flag);
+    appendBe16(payload, timeOsdCtrl.h264_show_x);
+    appendBe16(payload, timeOsdCtrl.h264_show_y);
 
     QByteArray packet;
-    packet.reserve(2 + 1 + 2 + kTimeOsdDataSize + 1);
+    packet.reserve(2 + 1 + 2 + sizeof(CAMERA_TIME_OSD_CTRL_S) + 1);
 
-    appendU8(packet, kHeader0);
-    appendU8(packet, kHeader1);
-    appendU8(packet, kTimeOsdCommand);
-    appendBe16(packet, kTimeOsdDataSize);
+    appendU8(packet, CDC_PACKET_HEADER0);
+    appendU8(packet, CDC_PACKET_HEADER1);
+    appendU8(packet, CDC_TIME_OSD_COMMAND);
+    appendBe16(packet, static_cast<quint16>(sizeof(CAMERA_TIME_OSD_CTRL_S)));
     packet.append(payload);
 
     appendU8(packet, Crc8::calculate(payload));
@@ -87,12 +55,12 @@ QByteArray CdcCommandCore::buildTimeOsdPacket(const TimeOsdOptions &options)
 }
 
 CdcCommandCore::CommandResult CdcCommandCore::sendTimeOsdCommand(const SerialPort::Config &config,
-                                                                 const TimeOsdOptions &options,
+                                                                 const CAMERA_TIME_OSD_CTRL_S &timeOsdCtrl,
                                                                  int writeTimeoutMs,
                                                                  int readTimeoutMs)
 {
     CommandResult result;
-    result.request = buildTimeOsdPacket(options);
+    result.request = buildTimeOsdPacket(timeOsdCtrl);
 
     SerialPort port;
     if (!port.open(config)) {
@@ -100,18 +68,18 @@ CdcCommandCore::CommandResult CdcCommandCore::sendTimeOsdCommand(const SerialPor
         return result;
     }
 
-    result = sendTimeOsdCommand(&port, options, writeTimeoutMs, readTimeoutMs);
+    result = sendTimeOsdCommand(&port, timeOsdCtrl, writeTimeoutMs, readTimeoutMs);
     port.close();
     return result;
 }
 
 CdcCommandCore::CommandResult CdcCommandCore::sendTimeOsdCommand(SerialPort *port,
-                                                                 const TimeOsdOptions &options,
+                                                                 const CAMERA_TIME_OSD_CTRL_S &timeOsdCtrl,
                                                                  int writeTimeoutMs,
                                                                  int readTimeoutMs)
 {
     CommandResult result;
-    result.request = buildTimeOsdPacket(options);
+    result.request = buildTimeOsdPacket(timeOsdCtrl);
 
     if (!port || !port->isOpen()) {
         result.errorMessage = QStringLiteral("串口未打开");
