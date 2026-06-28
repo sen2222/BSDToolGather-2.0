@@ -261,17 +261,17 @@ void CdcFunctionWidget::sendTimeOsdCommand()
         return;
     }
 
-    CdcCommandCore::TimeOsdOptions options;
-    options.timeStamp = timeStamp;
-    options.mjpegShowFlag = m_mjpegShowCheck->isChecked() ? 1 : 0;
-    options.mjpegShowX = static_cast<quint16>(m_mjpegXSpin->value());
-    options.mjpegShowY = static_cast<quint16>(m_mjpegYSpin->value());
-    options.h264ShowFlag = m_h264ShowCheck->isChecked() ? 1 : 0;
-    options.h264ShowX = static_cast<quint16>(m_h264XSpin->value());
-    options.h264ShowY = static_cast<quint16>(m_h264YSpin->value());
+    CAMERA_TIME_OSD_CTRL_S timeOsdCtrl;
+    timeOsdCtrl.time_stamp = timeStamp;
+    timeOsdCtrl.mjpeg_show_flag = m_mjpegShowCheck->isChecked() ? 1 : 0;
+    timeOsdCtrl.mjpeg_show_x = static_cast<quint16>(m_mjpegXSpin->value());
+    timeOsdCtrl.mjpeg_show_y = static_cast<quint16>(m_mjpegYSpin->value());
+    timeOsdCtrl.h264_show_flag = m_h264ShowCheck->isChecked() ? 1 : 0;
+    timeOsdCtrl.h264_show_x = static_cast<quint16>(m_h264XSpin->value());
+    timeOsdCtrl.h264_show_y = static_cast<quint16>(m_h264YSpin->value());
 
     setControlsEnabled(false);
-    const CdcCommandCore::CommandResult result = CdcCommandCore::sendTimeOsdCommand(&m_serialPort, options);
+    const CdcCommandCore::CommandResult result = CdcCommandCore::sendTimeOsdCommand(&m_serialPort, timeOsdCtrl);
     setControlsEnabled(true);
 
     if (!result.success) {
